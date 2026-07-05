@@ -12,6 +12,7 @@
 		customEmojiListEvent,
 		removeFromEmojiList
 	} from '$lib/author/CustomEmojis';
+	import { emojiEditorUrl } from '$lib/Constants';
 
 	interface Props {
 		event: Nostr.Event;
@@ -48,7 +49,7 @@
 			relays: getSeenOnRelays(event.id)
 		})
 	);
-	let emoemoUrl = $derived(`https://koteitan.github.io/emoemo/#/a/${naddr}`);
+	let url = $derived(`${emojiEditorUrl}#/a/${naddr}`);
 
 	async function add(): Promise<void> {
 		try {
@@ -90,7 +91,7 @@
 	{/if}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div use:melt={$item} onclick={() => window.open(emoemoUrl)} class="item">
+	<div use:melt={$item} onclick={() => window.open(url)} class="item">
 		<div class="icon"><IconExternalLink size={20} /></div>
 		<div>{$_('actions.open_url.button').replace('%s', 'emoemo')}</div>
 	</div>
