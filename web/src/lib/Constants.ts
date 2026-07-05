@@ -153,7 +153,7 @@ export const imageOptimizerServers = [
 	'https://nostr-image-optimizer.ocknamo.com/image/'
 ];
 
-export const emojiEditorUrl = 'https://ngrid-art.mono3.workers.dev/emoji-sets';
+export const emojiEditorUrl = 'https://koteitan.github.io/emoemo/';
 
 export const httpProxy = 'https://proxy.nostter.app';
 
