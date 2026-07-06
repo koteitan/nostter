@@ -15,7 +15,7 @@
 </script>
 
 <article>
-	<img src={url} alt="" />
+	<img src={url} alt="" loading="lazy" decoding="async" />
 	<main>
 		<h2>{name}</h2>
 		<p>{description}</p>

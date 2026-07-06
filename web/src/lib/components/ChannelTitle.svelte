@@ -9,7 +9,7 @@
 </script>
 
 <div>
-	<img src={channelMetadata?.picture} alt="" />
+	<img src={channelMetadata?.picture} alt="" decoding="async" />
 	<span>{channelMetadata?.name ?? ''}</span>
 </div>
 

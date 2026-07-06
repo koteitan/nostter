@@ -76,6 +76,7 @@
 		src={displaySrc}
 		alt={src}
 		loading="lazy"
+		decoding="async"
 		onload={() => {
 			loaded = true;
 			if (frozen) {

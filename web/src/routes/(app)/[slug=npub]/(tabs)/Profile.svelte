@@ -87,7 +87,7 @@
 
 <div class="banner">
 	{#if user?.banner}
-		<img src={user.banner} alt="" />
+		<img src={user.banner} alt="" decoding="async" />
 	{:else}
 		<div class="blank"></div>
 	{/if}

@@ -61,7 +61,13 @@
 			{#each urls as url}
 				<div class="swiper-slide">
 					<div class="swiper-zoom-container">
-						<img src={url.href} alt={url.href} class:single={urls.length === 1} />
+						<img
+							src={url.href}
+							alt={url.href}
+							class:single={urls.length === 1}
+							loading="lazy"
+							decoding="async"
+						/>
 					</div>
 				</div>
 			{/each}

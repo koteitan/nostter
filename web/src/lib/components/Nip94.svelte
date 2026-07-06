@@ -21,7 +21,7 @@
 
 {#if mimeType !== undefined && /image\/(gif|jpg|jpeg|png|webp|bmp)/.test(mimeType)}
 	<a href={url} target="_blank" rel="noopener noreferrer">
-		<img src={url} alt={event.content} />
+		<img src={url} alt={event.content} loading="lazy" decoding="async" />
 	</a>
 {:else}
 	<a href={url} target="_blank" rel="noopener noreferrer">{url}</a>

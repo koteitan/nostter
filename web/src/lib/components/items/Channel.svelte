@@ -68,7 +68,7 @@
 <article class="timeline-item">
 	<main>
 		{#if channelMetadata?.picture !== undefined}
-			<img src={channelMetadata.picture} alt="" />
+			<img src={channelMetadata.picture} alt="" loading="lazy" decoding="async" />
 		{/if}
 		<div class="channel">
 			<h1>

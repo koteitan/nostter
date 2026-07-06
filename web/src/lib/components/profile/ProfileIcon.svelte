@@ -28,6 +28,8 @@
 	alt=""
 	title={tooltip ? name : ''}
 	style="width: {width}; height: {height};"
+	loading="lazy"
+	decoding="async"
 	onerror={onError}
 />
 
