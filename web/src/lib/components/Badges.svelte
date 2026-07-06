@@ -178,7 +178,13 @@
 					target="_blank"
 					rel="noreferrer"
 				>
-					<img src={thumb ? thumb : image} alt={name} title={name} />
+					<img
+						src={thumb ? thumb : image}
+						alt={name}
+						title={name}
+						loading="lazy"
+						decoding="async"
+					/>
 				</a>
 			</li>
 		{:else}

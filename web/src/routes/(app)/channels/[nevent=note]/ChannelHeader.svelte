@@ -60,7 +60,12 @@
 		<div class="identity">
 			<div class="avatar">
 				{#if metadata?.picture && !brokenImage}
-					<img src={metadata.picture} alt="" onerror={() => (brokenImage = true)} />
+					<img
+						src={metadata.picture}
+						alt=""
+						decoding="async"
+						onerror={() => (brokenImage = true)}
+					/>
 				{:else}
 					<div class="placeholder"><IconMessages size={22} /></div>
 				{/if}
@@ -156,7 +161,12 @@
 			<div class="details-head">
 				<div class="avatar">
 					{#if metadata?.picture && !brokenImage}
-						<img src={metadata.picture} alt="" onerror={() => (brokenImage = true)} />
+						<img
+							src={metadata.picture}
+							alt=""
+							decoding="async"
+							onerror={() => (brokenImage = true)}
+						/>
 					{:else}
 						<div class="placeholder"><IconMessages size={22} /></div>
 					{/if}

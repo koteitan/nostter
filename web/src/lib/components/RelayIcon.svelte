@@ -33,7 +33,13 @@
 	{#if failed}
 		<span class="placeholder">{initial}</span>
 	{:else}
-		<img src={info.icon || favicon()} alt={host} onerror={onError} />
+		<img
+			src={info.icon || favicon()}
+			alt={host}
+			loading="lazy"
+			decoding="async"
+			onerror={onError}
+		/>
 	{/if}
 {/await}
 

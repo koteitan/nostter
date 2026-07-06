@@ -81,7 +81,7 @@
 	<div {...popover.content} class="popover">
 		<div {...popover.arrow}></div>
 
-		<img src={url} alt={text} title={text} />
+		<img src={url} alt={text} title={text} decoding="async" />
 
 		{#if $developerMode}
 			<div>{shortcode}</div>

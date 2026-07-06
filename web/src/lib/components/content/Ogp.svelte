@@ -44,7 +44,7 @@
 			{#if data.image}
 				{@const image = resolveImage(data.image, url)}
 				{#if image?.protocol === 'https:'}
-					<img src={image.href} alt="" onerror={error} loading="lazy" />
+					<img src={image.href} alt="" onerror={error} loading="lazy" decoding="async" />
 				{:else if image?.protocol === 'http:'}
 					<!-- Don't show image due to mixed content -->
 				{/if}

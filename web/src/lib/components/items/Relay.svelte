@@ -19,6 +19,8 @@
 				src={icon || url + '/favicon.ico'}
 				alt={name ?? hostname}
 				style="width: 48px; height: 48px;"
+				loading="lazy"
+				decoding="async"
 			/>
 		</a>
 	</div>
