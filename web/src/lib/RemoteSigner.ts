@@ -1,6 +1,6 @@
 import { NostrConnect } from 'nostr-tools/kinds';
 import { toBunkerURL } from 'nostr-tools/nip46';
-import { createRxForwardReq, createRxNostr, now, type RxNostr } from 'rx-nostr';
+import { createRxForwardReq, createRxNostr, now, uniq, type RxNostr } from 'rx-nostr';
 import { get } from 'svelte/store';
 import { pubkey } from './stores/Author';
 import type { Subscription } from 'rxjs';
@@ -68,36 +68,45 @@ class RemoteSigner {
 	}
 
 	#subscribe(): void {
+		if (this.#subscription && !this.#subscription.closed) {
+			return;
+		}
 		const req = createRxForwardReq();
-		this.#subscription = this.#rxNostr!.use(req).subscribe(async ({ event: requestEvent }) => {
-			const content = await Signer.decryptNip44(requestEvent.pubkey, requestEvent.content);
-			try {
-				const { id, method, params } = JSON.parse(content) as {
-					id: string;
-					method: string;
-					params: string[];
-				};
-				const { result, error } = await this.#call(method, params, requestEvent.pubkey);
-				const responseEvent = await Signer.signEvent({
-					kind: NostrConnect,
-					content: await Signer.encryptNip44(
-						requestEvent.pubkey,
-						JSON.stringify({ id, result, error })
-					),
-					tags: [['p', requestEvent.pubkey]],
-					created_at: now()
-				});
-				console.debug('[remote signer response]', { method, params, result, error });
-				this.#rxNostr?.send(responseEvent);
-			} catch (error) {
-				console.error('[remote signer error]', error);
-			}
-		});
+		this.#subscription = this.#rxNostr!.use(req)
+			.pipe(uniq())
+			.subscribe(async ({ event: requestEvent }) => {
+				const content = await Signer.decryptNip44(
+					requestEvent.pubkey,
+					requestEvent.content
+				);
+				try {
+					const { id, method, params } = JSON.parse(content) as {
+						id: string;
+						method: string;
+						params: string[];
+					};
+					const { result, error } = await this.#call(method, params, requestEvent.pubkey);
+					const responseEvent = await Signer.signEvent({
+						kind: NostrConnect,
+						content: await Signer.encryptNip44(
+							requestEvent.pubkey,
+							JSON.stringify({ id, result, error })
+						),
+						tags: [['p', requestEvent.pubkey]],
+						created_at: now()
+					});
+					console.debug('[remote signer response]', { method, params, result, error });
+					this.#rxNostr?.send(responseEvent);
+				} catch (error) {
+					console.error('[remote signer error]', error);
+				}
+			});
 		req.emit([{ kinds: [NostrConnect], '#p': [get(pubkey)] }]);
 	}
 
 	#unsubscribe(): void {
 		this.#subscription?.unsubscribe();
+		this.#subscription = undefined;
 	}
 
 	//#endregion
