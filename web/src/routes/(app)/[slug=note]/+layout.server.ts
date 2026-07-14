@@ -15,7 +15,6 @@ export const load: LayoutServerLoad<{
 	let id = '';
 	let relays: string[] = [];
 	let event: Nostr.Event | undefined;
-	let isNevent = false;
 
 	try {
 		const { type, data } = nip19.decode(params.slug);
@@ -27,7 +26,6 @@ export const load: LayoutServerLoad<{
 			}
 			case 'nevent': {
 				id = data.id;
-				isNevent = true;
 				if (data.relays !== undefined) {
 					relays = data.relays;
 				}
@@ -50,7 +48,7 @@ export const load: LayoutServerLoad<{
 		error(404, 'Not Found');
 	}
 
-	if (isNevent && event?.kind === 30023) {
+	if (event?.kind === 30023) {
 		const naddr = nip19.naddrEncode({
 			kind: event.kind,
 			pubkey: event.pubkey,
