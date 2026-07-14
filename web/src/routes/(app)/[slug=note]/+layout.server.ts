@@ -1,4 +1,5 @@
 import { nip19 } from 'nostr-tools';
+import { LongFormArticle } from 'nostr-tools/kinds';
 import type * as Nostr from 'nostr-typedef';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
@@ -48,7 +49,7 @@ export const load: LayoutServerLoad<{
 		error(404, 'Not Found');
 	}
 
-	if (event?.kind === 30023) {
+	if (event?.kind === LongFormArticle) {
 		const naddr = nip19.naddrEncode({
 			kind: event.kind,
 			pubkey: event.pubkey,
