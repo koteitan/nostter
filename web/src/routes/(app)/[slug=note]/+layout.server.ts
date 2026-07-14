@@ -1,9 +1,10 @@
 import { nip19 } from 'nostr-tools';
 import type * as Nostr from 'nostr-typedef';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { defaultRelays } from '$lib/Constants';
 import { fetchEvent } from '$lib/Api';
+import { findIdentifier } from '$lib/EventHelper';
 import { checkRestriction } from '$lib/server/Restriction';
 
 export const load: LayoutServerLoad<{
@@ -11,11 +12,13 @@ export const load: LayoutServerLoad<{
 	relays: string[];
 	event: Nostr.Event | undefined;
 }> = async ({ params, platform }) => {
+	let id = '';
+	let relays: string[] = [];
+	let event: Nostr.Event | undefined;
+	let isNevent = false;
+
 	try {
 		const { type, data } = nip19.decode(params.slug);
-
-		let id: string;
-		let relays: string[] = [];
 
 		switch (type) {
 			case 'note': {
@@ -24,6 +27,7 @@ export const load: LayoutServerLoad<{
 			}
 			case 'nevent': {
 				id = data.id;
+				isNevent = true;
 				if (data.relays !== undefined) {
 					relays = data.relays;
 				}
@@ -34,7 +38,7 @@ export const load: LayoutServerLoad<{
 			}
 		}
 
-		const event = await fetchEvent(
+		event = await fetchEvent(
 			id,
 			relays.length > 0 ? relays : defaultRelays.map(({ url }) => url)
 		);
@@ -42,13 +46,23 @@ export const load: LayoutServerLoad<{
 		if (event !== undefined) {
 			await checkRestriction(event.pubkey, platform);
 		}
-
-		return {
-			eventId: id,
-			relays,
-			event
-		};
 	} catch {
 		error(404, 'Not Found');
 	}
+
+	if (isNevent && event?.kind === 30023) {
+		const naddr = nip19.naddrEncode({
+			kind: event.kind,
+			pubkey: event.pubkey,
+			identifier: findIdentifier(event.tags) ?? '',
+			relays
+		});
+		redirect(308, `/${naddr}`);
+	}
+
+	return {
+		eventId: id,
+		relays,
+		event
+	};
 };
