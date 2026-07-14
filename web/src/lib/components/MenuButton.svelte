@@ -2,7 +2,7 @@
 	import { createDropdownMenu, melt } from '@melt-ui/svelte';
 	import { _ } from 'svelte-i18n';
 	import { nip19 } from 'nostr-tools';
-	import { ShortTextNote } from 'nostr-tools/kinds';
+	import { ChannelMessage, ShortTextNote } from 'nostr-tools/kinds';
 	import type * as Nostr from 'nostr-typedef';
 	import { page } from '$app/stores';
 	import { bookmark, unbookmark, isBookmarked } from '$lib/author/Bookmark';
@@ -53,7 +53,11 @@
 		})
 	);
 	let url = $derived(`${$page.url.origin}/${nevent}`);
-	let rootId = $derived(referTags(event).root?.at(1) ?? event.id);
+	let rootTag = $derived(referTags(event).root);
+	let rootId = $derived(rootTag?.at(1) ?? event.id);
+	let isChannelMuteTarget = $derived(
+		event.kind === ChannelMessage && rootTag?.at(1) !== undefined
+	);
 
 	async function onBookmark() {
 		console.log('[bookmark]', event, $rom);
@@ -282,14 +286,18 @@
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div use:melt={$item} onclick={onUnmuteThread} class="item undo">
 				<div class="icon"><IconVolumeOff size={iconSize} /></div>
-				<div>{$_('actions.unmute.thread')}</div>
+				<div>
+					{$_(isChannelMuteTarget ? 'actions.unmute.channel' : 'actions.unmute.thread')}
+				</div>
 			</div>
 		{:else}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div use:melt={$item} onclick={onMuteThread} class="item">
 				<div class="icon"><IconVolumeOff size={iconSize} /></div>
-				<div>{$_('actions.mute.thread')}</div>
+				<div>
+					{$_(isChannelMuteTarget ? 'actions.mute.channel' : 'actions.mute.thread')}
+				</div>
 			</div>
 		{/if}
 		{#if event.pubkey === $authorPubkey}

@@ -337,6 +337,7 @@
 			"reactions": "Mute reactions (likes)",
 			"zaps": "Mute zaps",
 			"thread": "Mute this thread",
+			"channel": "Mute this channel",
 			"failed": "Failed to mute."
 		},
 		"unmute": {
@@ -346,6 +347,7 @@
 			"reactions": "Unmute this user's reactions",
 			"zaps": "Unmute this user's zaps",
 			"thread": "Unmute this thread",
+			"channel": "Unmute this channel",
 			"failed": "Failed to unmute."
 		},
 		"delete": {
