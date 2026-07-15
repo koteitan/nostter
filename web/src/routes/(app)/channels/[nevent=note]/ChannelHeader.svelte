@@ -33,7 +33,13 @@
 
 	const {
 		elements: { menu, item, trigger, overlay, separator }
-	} = createDropdownMenu({ preventScroll: false });
+	} = createDropdownMenu({
+		preventScroll: false,
+		positioning: {
+			placement: 'bottom-end',
+			strategy: 'fixed'
+		}
+	});
 
 	let detailsDialog = $state<HTMLDialogElement>();
 	let brokenImage = $state(false);
