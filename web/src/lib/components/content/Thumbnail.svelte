@@ -32,7 +32,7 @@
 				});
 			}
 			const index = urls.findIndex((u) => u.href === url.href);
-			swiper.activeIndex = index >= 0 ? index : 0;
+			swiper.slideTo(index >= 0 ? index : 0, 0);
 		}
 	});
 
