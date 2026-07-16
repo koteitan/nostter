@@ -213,7 +213,8 @@ export class ChannelChat {
 		}
 		this.#seen.add(event.id);
 		const index = this.messages.findIndex((e) => e.created_at > event.created_at);
-		this.shift = true;
+		// virtua's shift mode is only valid when items are added at the start.
+		this.shift = index === 0;
 		this.messages =
 			index < 0 ? [...this.messages, event] : this.messages.toSpliced(index, 0, event);
 	}

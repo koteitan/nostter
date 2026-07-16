@@ -26,9 +26,9 @@
 	const groupingThreshold = 5 * 60;
 
 	let ref = $state<VirtualizerRef>();
+	let listHeight = $state(0);
 
 	let atBottom = true;
-	let initialScrolled = false;
 	let lastSeq = 0;
 
 	let unread = $state(0);
@@ -69,6 +69,7 @@
 		const length = visible.length;
 		if (length > 0) {
 			ref?.scrollToIndex(length - 1, { align: 'end' });
+			requestAnimationFrame(() => window.scrollTo(0, document.documentElement.scrollHeight));
 		}
 	}
 
@@ -94,9 +95,7 @@
 	});
 
 	$effect(() => {
-		const length = visible.length;
-		if (!initialScrolled && length > 0) {
-			initialScrolled = true;
+		if (listHeight > 0 && atBottom && visible.length > 0) {
 			tick().then(scrollToBottom);
 		}
 	});
@@ -116,7 +115,7 @@
 	});
 </script>
 
-<div class="chat">
+<div class="chat" bind:clientHeight={listHeight}>
 	{#if chat.loading && visible.length === 0}
 		<div class="loading"><Loading /></div>
 	{/if}
